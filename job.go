@@ -126,7 +126,10 @@ func (j *Job) GetBuild(ctx context.Context, id int64) (*Build, error) {
 	// i.e. Server : https://<domain>/jenkins/job/JOB1
 	// "https://<domain>/jenkins/" is the server URL,
 	// we are expecting jobURL = "job/JOB1"
-	jobURL := strings.Replace(j.Raw.URL, j.Jenkins.Server, "", -1)
+	// jobURL := strings.Replace(j.Raw.URL, j.Jenkins.Server, "", -1)
+	jobURL := fmt.Sprintf("/job/%s", j.GetName())
+	// fmt.Printf("jobURL: %s j.Raw.URL: %s j.Jenkins.Server: %s j.Jenkins.Requester.Base: %s \n", jobURL, j.Raw.URL, j.Jenkins.Server, j.Jenkins.Requester.Base)
+	//build := Build{Jenkins: jenkinsWithNewBase, Job: j, Raw: new(BuildResponse), Depth: 1, Base: jobURL + strconv.FormatInt(id, 10)}
 	build := Build{Jenkins: j.Jenkins, Job: j, Raw: new(BuildResponse), Depth: 1, Base: jobURL + "/" + strconv.FormatInt(id, 10)}
 	status, err := build.Poll(ctx)
 	if err != nil {
